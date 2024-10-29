@@ -1,0 +1,11 @@
+const express = require("express");
+const app = express();
+const router = express.Router();
+
+
+const {addOrganisation} = require('../Controller/register')
+
+router.post('/add/organisation', addOrganisation)
+
+
+module.exports = router
