@@ -1,11 +1,13 @@
+const authMiddleware = require('../Controller/accessCode'); 
 const express = require("express");
-const app = express();
 const router = express.Router();
+const { userUploads } = require('../multer/multer'); 
 
+const { addOrganisation, loginOrgnisation, getLoginUser, createCamp } = require('../Controller/register');
 
-const {addOrganisation} = require('../Controller/register')
+router.post('/add/organisation', userUploads.none(), addOrganisation);
+router.post('/login/organisation', loginOrgnisation);
+router.get('/get/login/user', authMiddleware, getLoginUser);  
+router.get('/create/camp', authMiddleware, createCamp);  
 
-router.post('/add/organisation', addOrganisation)
-
-
-module.exports = router
+module.exports = router;

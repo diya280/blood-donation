@@ -7,6 +7,10 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import {HttpClientModule, HttpClient, HTTP_INTERCEPTORS} from "@angular/common/http";
 import { SignupComponent } from './signup/signup.component'
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
+
 
 
 @NgModule({
@@ -19,7 +23,10 @@ import { SignupComponent } from './signup/signup.component'
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

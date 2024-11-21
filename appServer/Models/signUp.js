@@ -1,10 +1,14 @@
 const mongoose = require('mongoose')
-const { type } = require('os')
 
 const bloodDonationSchema = new mongoose.Schema({
     organisationName:{
         type: String,
         required : true,
+    },
+    email:{
+        type: String,
+        required: true,
+        unique: true,
     },
     address:{
         streetAddress:{
@@ -35,6 +39,11 @@ const bloodDonationSchema = new mongoose.Schema({
     contact:{
         type: Number,
         required: true,
+        unique: true,
+    },
+    password:{
+        type: String,
+        required: true,
     },
     oid:{
         type: String, 
@@ -43,6 +52,5 @@ const bloodDonationSchema = new mongoose.Schema({
 
 
 const organisations = mongoose.model('organisation', bloodDonationSchema);
-
 module.exports = organisations
 

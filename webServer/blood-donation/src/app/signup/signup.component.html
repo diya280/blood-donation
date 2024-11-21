@@ -1,1 +1,191 @@
-<p>signup works!</p>
+
+<div class="flex flex-wrap h-screen bg-gray-50">
+  <!-- Form Section -->
+  <div class="flex w-full lg:w-1/2 justify-center items-center bg-white px-6 lg:px-20">
+    <div class="w-full max-w-lg">
+      <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">Organisation Sign Up</h2>
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+       
+ <!-- Organisation Name -->
+ <div>
+  <label class="block text-sm font-medium text-gray-700">Organization Name</label>
+  <input
+    type="text"
+    formControlName="organisationName"
+    placeholder="Enter organization name"
+    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+  />
+  <div *ngIf="signupForm.get('organisationName')?.invalid && signupForm.get('organisationName')?.touched" class="text-red-500 text-sm mt-1">
+    <span *ngIf="signupForm.get('organisationName')?.errors?.['required']">Organization Name is required.</span>
+    <span *ngIf="signupForm.get('organisationName')?.errors?.['minlength']">Minimum 3 characters required.</span>
+    <span *ngIf="signupForm.get('organisationName')?.errors?.['maxlength']">Maximum 50 characters allowed.</span>
+  </div>
+</div>
+
+<!-- Email -->
+<div class="mt-4">
+  <label class="block text-sm font-medium text-gray-700">Email</label>
+  <input
+    type="email"
+    formControlName="email"
+    placeholder="Enter email address"
+    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+  />
+  <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-red-500 text-sm mt-1">
+    <span *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</span>
+    <span *ngIf="signupForm.get('email')?.errors?.['email']">Enter a valid email address.</span>
+  </div>
+</div>
+
+<!-- Contact -->
+<div class="mt-4">
+  <label class="block text-sm font-medium text-gray-700">Contact</label>
+  <input
+    type="text"
+    formControlName="contact"
+    placeholder="Enter contact number"
+    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+  />
+  <div *ngIf="signupForm.get('contact')?.invalid && signupForm.get('contact')?.touched" class="text-red-500 text-sm mt-1">
+    <span *ngIf="signupForm.get('contact')?.errors?.['required']">Contact number is required.</span>
+    <span *ngIf="signupForm.get('contact')?.errors?.['pattern']">Enter a valid 10-digit contact number.</span>
+  </div>
+</div>
+
+<!-- Password -->
+<div class="grid grid-cols-2 gap-4 mt-4">
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Password</label>
+    <input
+      type="password"
+      formControlName="password"
+      placeholder="Enter password"
+      class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+    />
+    <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-red-500 text-sm mt-1">
+      <span *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</span>
+      <span *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long.</span>
+    </div>
+  </div>
+
+  <!-- Confirm Password -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
+    <input
+      type="password"
+      formControlName="confirmPassword"
+      placeholder="Confirm password"
+      class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+    />
+    <div *ngIf="signupForm.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.touched" class="text-red-500 text-sm mt-1">
+      Passwords do not match.
+    </div>
+  </div>
+</div>
+
+<!-- Street Address -->
+<div class="mt-4">
+  <label class="block text-sm font-medium text-gray-700">Street Address</label>
+  <input
+    type="text"
+    formControlName="streetAddress"
+    placeholder="Enter street address"
+    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+  />
+  <div *ngIf="signupForm.get('streetAddress')?.invalid && signupForm.get('streetAddress')?.touched" class="text-red-500 text-sm mt-1">
+    Street Address is required.
+  </div>
+</div>
+
+<!-- City -->
+<div class="mt-4">
+  <label class="block text-sm font-medium text-gray-700">City</label>
+  <input
+    type="text"
+    formControlName="city"
+    placeholder="Enter city name"
+    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+  />
+  <div *ngIf="signupForm.get('city')?.invalid && signupForm.get('city')?.touched" class="text-red-500 text-sm mt-1">
+    City is required.
+  </div>
+</div>
+
+<!-- District -->
+<div class="grid grid-cols-2 gap-4 mt-4">
+  <div>
+    <label class="block text-sm font-medium text-gray-700">District</label>
+    <input
+      type="text"
+      formControlName="district"
+      placeholder="Enter district"
+      class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+    />
+    <div *ngIf="signupForm.get('district')?.invalid && signupForm.get('district')?.touched" class="text-red-500 text-sm mt-1">
+      District is required.
+    </div>
+  </div>
+
+  <!-- Block -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Block</label>
+    <input
+      type="text"
+      formControlName="block"
+      placeholder="Enter block"
+      class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+    />
+    <div *ngIf="signupForm.get('block')?.invalid && signupForm.get('block')?.touched" class="text-red-500 text-sm mt-1">
+      Block is required.
+    </div>
+  </div>
+</div>
+
+<!-- Zip Code -->
+<div class="grid grid-cols-2 gap-4 mt-4">
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Zip Code</label>
+    <input
+      type="text"
+      formControlName="zipCode"
+      placeholder="Enter zip code"
+      class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+    />
+    <div *ngIf="signupForm.get('zipCode')?.invalid && signupForm.get('zipCode')?.touched" class="text-red-500 text-sm mt-1">
+      <span *ngIf="signupForm.get('zipCode')?.errors?.['required']">Zip Code is required.</span>
+      <span *ngIf="signupForm.get('zipCode')?.errors?.['pattern']">Enter a valid 5- or 6-digit zip code.</span>
+    </div>
+  </div>
+
+  <!-- State -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">State</label>
+    <input
+      type="text"
+      formControlName="state"
+      placeholder="Enter state"
+      class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+    />
+    <div *ngIf="signupForm.get('state')?.invalid && signupForm.get('state')?.touched" class="text-red-500 text-sm mt-1">
+      State is required.
+    </div>
+  </div>
+</div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="signupForm.invalid"
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 mt-6"
+        >
+          Sign Up
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Image Section -->
+  <div class="hidden lg:flex w-1/2 bg-gradient-to-r from-blue-500 to-purple-600 items-center justify-center">
+    <img src="https://via.placeholder.com/400" alt="Signup Illustration" class="w-3/4 h-auto rounded-lg shadow-lg" />
+  </div>
+</div>
