@@ -1,0 +1,58 @@
+
+<div *ngIf="attendees && attendees.length !== 0"> 
+<div class="head bg-gray-100 p-4 rounded-lg shadow-md">
+    <div class="camp-details">
+      <div class="camp-title text-2xl font-semibold text-gray-800">
+       <span class="title"> {{title | titlecase}} </span>
+      </div>
+    </div>
+    <div class="mt-2 text-sm text-gray-500 camp-details">
+      <span class="addressHead">Address : &nbsp;</span>
+      <span class="address"> {{streetAddress}}, {{city | titlecase}},  {{block | titlecase}}, {{district | titlecase}} - {{zipCode}} , [{{state | titlecase}}] </span>  
+    </div>
+    <div class="camp-details" style="font-weight: 600; font-size: 20px;"> Organise-date - <span class="date"> {{ date | date: 'd MMMM yyyy' }} </span></div>
+  </div>
+  
+
+<div class="container mx-auto p-4">
+    <div class="overflow-x-auto shadow-lg rounded-lg bg-white">
+      <table class="min-w-full table-auto">
+        <thead class="bg-blue-600 text-white">
+          <tr>
+            <th class="py-3 px-4 text-center">First Name</th>
+            <th class="py-3 px-4 text-center">Last Name</th>
+            <th class="py-3 px-4 text-center">Address</th>
+            <th class="py-3 px-4 text-center">Contact</th>
+            <th class="py-3 px-4 text-center">Blood Group</th>
+            <th class="py-3 px-4 text-center">Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of attendees | paginate: { itemsPerPage: 5, currentPage: page }">
+            <td class="py-2 px-4 border-b">{{ user.firstname }}</td>
+            <td class="py-2 px-4 border-b">{{ user.lastname }}</td>
+            <td class="py-2 px-4 border-b">{{ user.address?.streetAddress}}, {{ user.address?.city}}, {{ user.address?.district}} </td>
+            <td class="py-2 px-4 border-b">{{ user.contact }}</td>
+            <td class="py-2 px-4 border-b">{{ user.bloodGroup }}</td>
+            <td class="py-2 px-4 border-b">{{ user.quantity }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="mt-4 flex justify-center">
+      <pagination-controls (pageChange)="page = $event" ></pagination-controls>
+    </div>
+  </div>
+  
+</div>
+
+   <!-- no member added -->
+   <div class="camp">
+    <div 
+      class="noCamps flex items-center justify-center text-center text-lg font-semibold text-gray-700 bg-blue-100 rounded-lg shadow-md p-6" 
+      *ngIf="attendees && attendees.length === 0">
+      No Member added yet !!
+    </div>
+  </div>
+

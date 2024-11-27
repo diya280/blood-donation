@@ -13,6 +13,40 @@ export class SignupComponent implements OnInit {
   
   ngOnInit(): void {}
   signupForm: FormGroup;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+
+  states: string[] = [
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal'
+  ];
+
 
  constructor(private service: AuthServiceService,private toast: ToastrService,
     private route: Router, private fb: FormBuilder) {
@@ -31,6 +65,15 @@ export class SignupComponent implements OnInit {
     }, { validator: this.passwordMatchValidator });
   }
 
+
+  togglePasswordVisibility(field: string): void {
+    if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else if (field === 'confirmPassword') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
+  }
+
   // Custom validator for matching passwords
   passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
     const password = group.get('password')?.value;
@@ -39,6 +82,8 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('called');
+    
     if (this.signupForm.valid) {
       const formData = new FormData();
       formData.append('organisationName', this.signupForm.get('organisationName')?.value);
@@ -59,12 +104,13 @@ export class SignupComponent implements OnInit {
           if (res.status === 'Success') {
             localStorage.setItem('authToken', res.token);
             console.log('Token saved:', res.token);
+            this.toast.success(res.message || 'Organisation signed up succesfully')
             this.navigateToDashboard();
           }
         },
         (error: any) => {
           console.error('Error during signup:', error);
-          this.toast.error('Signup failed. Please try again.', 'Error');
+          this.toast.error(error.error.message ||'Signup failed. Please try again.', 'Error');
         }
       );
     } else {

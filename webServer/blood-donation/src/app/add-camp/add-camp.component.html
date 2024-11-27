@@ -1,0 +1,94 @@
+
+<app-navbar></app-navbar>
+
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 p-4">
+    <h2 class="text-center mb-4" 
+        style="font-weight: 700; font-size: x-large; 
+               background: linear-gradient(to right, #6a11cb, #2575fc); 
+               -webkit-background-clip: text; 
+               color: transparent;">
+      Add Organisation Camp
+    </h2>
+    <form #campForm="ngForm" (ngSubmit)="onSubmit(campForm)">
+      <div class="row g-3">
+        <!-- Date -->
+        <div class="col-md-6">
+          <label for="date" class="form-label">Organise Date</label>
+          <input type="date" [min]="minDate" class="form-control" [(ngModel)]="date"
+            id="date" name="date" required>
+          <div *ngIf="campForm.submitted && !date" class="text-danger mt-1">Date is required.</div>
+        </div>
+        <!-- Title -->
+        <div class="col-md-6">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" name="title" [(ngModel)]="title"
+            placeholder="Enter title" required>
+          <div *ngIf="campForm.submitted && !title" class="text-danger mt-1">Title is required.</div>
+        </div>
+        <!-- Street Address -->
+        <div class="col-12">
+          <label for="streetAddress" class="form-label">Street Address</label>
+          <input type="text" class="form-control" id="streetAddress" [(ngModel)]="streetAddress"
+            name="streetAddress" placeholder="Enter street address" required>
+          <div *ngIf="campForm.submitted && !streetAddress" class="text-danger mt-1">Street address is required.</div>
+        </div>
+        <!-- City -->
+        <div class="col-md-6">
+          <label for="city" class="form-label">City</label>
+          <input type="text" class="form-control" id="city" name="city" [(ngModel)]="city"
+            placeholder="Enter city" required>
+          <div *ngIf="campForm.submitted && !city" class="text-danger mt-1">City is required.</div>
+        </div>
+        <!-- District -->
+        <div class="col-md-6">
+          <label for="district" class="form-label">District</label>
+          <input type="text" class="form-control" id="district" name="district" [(ngModel)]="district"
+            placeholder="Enter district" required>
+          <div *ngIf="campForm.submitted && !district" class="text-danger mt-1">District is required.</div>
+        </div>
+        <!-- Block -->
+        <div class="col-md-6">
+          <label for="block" class="form-label">Block</label>
+          <input type="text" class="form-control" id="block" name="block" [(ngModel)]="block"
+            placeholder="Enter block" required>
+          <div *ngIf="campForm.submitted && !block" class="text-danger mt-1">Block is required.</div>
+        </div>
+        <!-- Zip Code -->
+        <div class="col-md-6">
+          <label for="zipCode" class="form-label">Zip Code</label>
+          <input type="text" class="form-control" id="zipCode" name="zipCode" [(ngModel)]="zipCode"
+            pattern="^[0-9]{5,6}$" placeholder="Enter zip code" required>
+          <div *ngIf="campForm.submitted && !zipCode" class="text-danger mt-1">Zip code is required.</div>
+          <div *ngIf="campForm.submitted && zipCode && !campForm.controls['zipCode']?.valid" class="text-danger mt-1">
+            Zip code must be 5-6 digits.
+          </div>
+        </div>
+        <!-- State -->
+        <div class="col-md-6">
+          <label for="state" class="form-label">State</label>
+          <input type="text" class="form-control" id="state" name="state" [(ngModel)]="state"
+            placeholder="Enter state" required>
+          <div *ngIf="campForm.submitted && !state" class="text-danger mt-1">State is required.</div>
+        </div>
+        <!-- Contact -->
+        <div class="col-md-6">
+          <label for="contact" class="form-label">Contact</label>
+          <input type="text" class="form-control" id="contact" name="contact" [(ngModel)]="contact"
+            pattern="^[0-9]{10}$" placeholder="Enter contact number" required>
+          <div *ngIf="campForm.submitted && !contact" class="text-danger mt-1">Contact is required.</div>
+          <div *ngIf="campForm.submitted && contact && !campForm.controls['contact']?.valid" class="text-danger mt-1">
+            Contact must be a 10-digit number.
+          </div>
+        </div>
+        <!-- Submit Button -->
+        <div class="col-12 text-center mt-4">
+          <button type="submit" class="btn btn-primary px-5 py-2 fw-bold shadow" 
+                  style="background: linear-gradient(to right, #2575fc, #6a11cb); border: none;">
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

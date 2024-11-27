@@ -4,14 +4,14 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const organisations = require('../Models/signUp');
-
+const attendees = require('../Models/attendees')
 
 async function addOrganisation(req, res, next) {
     try {
        
         const {
-            organisationName, streetAddress, city,  district, block, zipCode, state, email, contact,password 
-        } = req.body;
+            organisationName, streetAddress, city,  district, block, 
+            zipCode, state, email, contact,password } = req.body;
 
         if (
             !organisationName || !streetAddress || !city || !district ||
@@ -23,13 +23,23 @@ async function addOrganisation(req, res, next) {
                 message: 'All fields are required.',
             });
         }
+        let existingOrg;
 
-        const existingOrg = await register.findOne({ email });
+        existingOrg = await register.findOne({ email });
         if (existingOrg) {
             return res.status(400).json({
                 status: 'Error',
                 language: 'en-US',
                 message: 'Email is already registered.',
+            });
+        }
+
+         existingOrg = await register.findOne({ contact });
+        if (existingOrg) {
+            return res.status(400).json({
+                status: 'Error',
+                language: 'en-US',
+                message: 'Contact is already registered.',
             });
         }
 
@@ -67,16 +77,13 @@ async function addOrganisation(req, res, next) {
         res.status(500).json({
             status: 'Error',
             language: 'en-US',
-            message: 'Internal server error.',
-            error: error.message,
+            message: 'Erron in signup, try after sometime',
         });
     }
 }
 
-
 async function loginOrgnisation(req, res, next) {
   try {
-    console.log("Request body:", req.body);
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -90,7 +97,8 @@ async function loginOrgnisation(req, res, next) {
     if (!user) {
       return res.status(404).json({
         error: 'User not found.',
-        statusCode: 404
+        statusCode: 404, 
+        message:'User not found',
       });
     }
 
@@ -98,7 +106,8 @@ async function loginOrgnisation(req, res, next) {
     if (!isPasswordValid) {
       return res.status(401).json({
         error: 'Invalid credentials.',
-        statusCode: 401
+        statusCode: 401,
+        message: 'Incorrect password'
       });
     }
 
@@ -120,21 +129,24 @@ async function loginOrgnisation(req, res, next) {
         status: "Error",
         language: 'en-US',
         error: error.message,
+        message: 'Error in organisation login'
     });
   }
 }
 
-
 async function getLoginUser(req, res, next){
    try{
-    const user = req.user
-    const userId = user.id
 
-
+    const userId = req.user.id
+    if (!userId) {
+        return res.status(400).json({
+          status: 'Error',
+          language: 'en-US',
+          message: 'Id is required.',
+        });
+      }
     const loginUser = await organisations.findOne({_id: userId})
-    console.log('login-user', loginUser)
-
-  res.status(200).json({
+     res.status(200).json({
             status: "Success",
             language: 'en-US',
             message: 'get login user succesfully !!',
@@ -152,8 +164,199 @@ async function getLoginUser(req, res, next){
 }
 
 async function createCamp(req, res, next) {
-    console.log('authantication', req.user)
+  try {
+      const {
+          date, title, streetAddress,
+          city, district, block, zipCode,
+          state, contact } = req.body;
+
+      if (!date || !title || !streetAddress || !city ||
+          !district || !block || !zipCode || !state || !contact) {
+          return res.status(400).json({
+              status: 'Error',
+              language: 'en-US',
+              message: 'All fields are required.',
+          });
+      }
+
+      if (!req.user || !req.user.id) {
+          return res.status(401).json({
+              status: 'Error',
+              language: 'en-US',
+              message: 'Unauthorized: User ID not found.',
+          });
+      }
+
+      const campId = req.user.id;
+      
+      const orgCamp = new camp({
+          date,
+          title,
+          address: {
+              streetAddress,
+              city,
+              district,
+              block,
+              zipCode,
+              state,
+          },
+          contact,
+          createdId: campId ,
+      });
+
+      const addCamp = await orgCamp.save();
+
+          res.status(201).json({
+          status: 'Success',
+          language: 'en-US',
+          data: addCamp,
+          message: 'Camp added successfully!',
+      });
+  } catch (err) {
+      console.error('Error:', err);
+      res.status(500).json({
+          status: "Error",
+          language: 'en-US',
+          error: err.message,
+      });
+  }
+}
+
+async function getCampById(req, res, next) {
+    try{
+        const campId = req.user.id
+        if (!campId) {
+            return res.status(400).json({
+              status: 'Error',
+              language: 'en-US',
+              message: 'Id is required.',
+            });
+          }
+
+        const camps = await camp.find({createdId: campId})
+           res.status(201).json({
+            status: 'Success',
+            language: 'en-US',
+            data: camps,
+            message: 'get camp by id successfully!',
+        });
+    }catch(err){
+        console.error('Error:', err);
+      res.status(500).json({
+          status: "Error",
+          language: 'en-US',
+          error: err.message,
+      }); 
+    }
+}
+
+async function getAllCamps(req, res, next) {
+    try{
+
+    const campData = await camp.find()
+    console.log('camp-data', campData)
+
+        res.status(201).json({
+            status: 'Success',
+            language: 'en-US',
+            data: campData,
+            message: 'get all camps successfully!',
+        });
+    }catch(err){
+        console.error('Error:', err);
+        res.status(500).json({
+            status: "Error",
+            language: 'en-US',
+            error: err.message,
+        });   
+    }
     
 }
 
-module.exports = { addOrganisation, loginOrgnisation, getLoginUser, createCamp };
+async function addMember(req, res, next) {
+    try {
+      console.log('Request Body:', req.body);
+  
+      const { 
+        userData: { firstName, lastName, bloodGroup, streetAddress, city, district, contact, quantity },
+        id: campId 
+      } = req.body;
+  
+      if (!firstName || !lastName || !bloodGroup || !streetAddress || !city || !district || !contact || !quantity || !campId) {
+        return res.status(400).json({
+          status: 'Error',
+          language: 'en-US',
+          message: 'All fields are required.',
+        });
+      }
+  
+      const newAttendee = new attendees({
+        firstname: firstName,
+        lastname: lastName,
+        bloodGroup,
+        quantity,
+        address: {
+          streetAddress,
+          city,
+          district,
+        },
+        contact,
+        campId,
+      });
+  
+      console.log('New Attendee Data:', newAttendee);
+  
+      const savedAttendee = await newAttendee.save();
+  
+      return res.status(201).json({
+        status: 'Success',
+        language: 'en-US',
+        data: savedAttendee,
+        message: 'Member added successfully',
+      });
+    } catch (err) {
+      console.error('Error:', err);
+      return res.status(500).json({
+        status: 'Error',
+        language: 'en-US',
+        error: err.message,
+        message: 'Error adding member',
+      });
+    }
+  }
+  
+  async function getAttendeesById(req, res, next) {
+    try {
+      const id = req.query.id;  
+      if (!id) {
+        return res.status(400).json({
+          status: 'Error',
+          language: 'en-US',
+          message: 'Id is required.',
+        });
+      }
+  
+      const members = await attendees.find({ campId: id }).populate({ path: 'campId', model: 'camp' }).exec();
+  
+      return res.status(200).json({
+        status: 'Success',
+        language: 'en-US',
+        data: members,
+        message: 'Members retrieved successfully by campId',
+      });
+  
+    } catch (err) {
+      console.error('Error:', err);
+      return res.status(500).json({
+        status: 'Error',
+        language: 'en-US',
+        error: err.message,
+        message: 'Error in getting members',
+      });
+    }
+  }
+  
+
+module.exports = { addOrganisation, loginOrgnisation, getLoginUser, createCamp, getCampById, getAllCamps, addMember, getAttendeesById };
+
+

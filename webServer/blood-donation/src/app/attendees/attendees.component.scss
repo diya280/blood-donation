@@ -1,0 +1,94 @@
+
+
+.camp-details{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.date{
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.addressHead{
+    font-size: 19px;
+    font-weight: 600;
+    color: black;
+}
+
+.address{
+    color: black;
+    font-size: 15px;
+    font-weight: 400; 
+}
+
+.title{
+    font-size: 31px;
+    font-weight: 400;
+    color: darkred;
+}
+
+
+/* Optional custom styles to make the table more attractive */
+table {
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #2c3e50;
+    color: white;
+    font-size: 16px;
+  }
+  
+  td {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .camp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; 
+    background-color: #f9fafb; 
+  }
+  
+  .noCamps {
+    max-width: 400px;
+    font-size: 1.25rem;
+    color: #16171a; 
+    background-color: #e0f2fe;
+    border: 2px dashed #16171a; 
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    animation: fadeIn 0.5s ease-in-out; 
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  

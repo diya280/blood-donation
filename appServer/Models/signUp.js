@@ -47,7 +47,11 @@ const bloodDonationSchema = new mongoose.Schema({
     },
     oid:{
         type: String, 
-    }
+    },
+    createdDate: {
+        type: Date,
+        default: Date.now 
+   },
 })
 
 

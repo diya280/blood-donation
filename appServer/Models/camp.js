@@ -40,6 +40,15 @@ contact:{
     type: Number,
     required: true,
 },
+createdId:{
+    type: String,
+    required: true,
+},
+createdDate: {
+     type: Date,
+     default: Date.now 
+},
+
 })
 
 const organisationCamp = mongoose.model('camp', campSchema);

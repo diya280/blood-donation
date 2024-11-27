@@ -1,5 +1,7 @@
 import { Component , OnInit} from '@angular/core';
 import { AuthServiceService } from '../auth-service.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -7,16 +9,18 @@ import { AuthServiceService } from '../auth-service.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
+
 export class NavbarComponent implements OnInit{
 
-  constructor(private service: AuthServiceService){}
+  constructor(private service: AuthServiceService, private toast: ToastrService, private route: Router){}
 
   loginUser: any[] =[];
   isModalOpen: boolean = false;
   email: string = '';
   password: string = '';
   errorMessage: string = ''; 
-
+  activeButton: string = 'home'; 
+  showPassword: boolean = false;
 
   openModal() {
     console.log('open click')
@@ -41,14 +45,21 @@ export class NavbarComponent implements OnInit{
       console.log('error in getting user', error)
     })
   }
+
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
   
   loginOrganisation(event: Event): void {
     event.preventDefault();
+
     if (!this.email || !this.password) {
-      this.errorMessage = 'Email and password are required!';
+      alert('Please fill in all required fields.');
       return;
     }
 
+    console.log('Logging in with:', this.email, this.password);
     const data ={
       email: this.email,
       password: this.password,
@@ -61,11 +72,13 @@ export class NavbarComponent implements OnInit{
         localStorage.setItem('authToken', res.token);
         console.log('Token saved:', res.token);
       }
-      this.getUser();
+      this.toast.success('Logged in successfully!', 'Success'); 
       this.closeModal();
       this.clearData();
-    },(error:any)=>{
+      this.getUser();
+      },(error:any)=>{
       console.log('error in login organisation', error)
+      this.toast.error( error.error.message||'Error in login, try after sometime'); 
     })
   }
 
@@ -74,4 +87,25 @@ clearData(){
   this.password = ''
 }
 
+navigateToAdd(){
+  this.route.navigate(['/add-camp']);
+}
+
+navigateToHome(){
+  this.route.navigate(['/']);
+}
+
+navigateToDetails(status: string) {
+  console.log('status', status);
+  this.route.navigate(['/camp-details'], 
+    { queryParams: { status: status } });
+}
+
+navigateToMember(){
+  this.route.navigate(['/add-member']);
+}
+
+setActiveButton(button: string): void {
+  this.activeButton = button; 
+}
 }

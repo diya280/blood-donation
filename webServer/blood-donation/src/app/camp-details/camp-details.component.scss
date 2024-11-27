@@ -1,0 +1,76 @@
+.camp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; 
+    background-color: #f9fafb; 
+  }
+  
+  .noCamps {
+    max-width: 400px;
+    font-size: 1.25rem;
+    color: #16171a; 
+    background-color: #e0f2fe;
+    border: 2px dashed #16171a; 
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    animation: fadeIn 0.5s ease-in-out; 
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+ .creat-date{
+  text-align: end;
+  margin-top: -12px;
+  font-size: 11px;
+  font-weight: 700;
+ }
+
+.close{
+  display: flex;
+  justify-content: end;
+  font-weight: bolder;
+}
+
+.close-button{
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: -15px;
+  background: repeating-linear-gradient(45deg, black, transparent 100px);
+  color: white;
+  width: 5rem;
+  height: 30px;
+  border-radius: 20px;
+}
+
+.event_date{
+  font-size: 14px;
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+.date{
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.camp_address{
+ font-size: 18px;
+ font-weight: 500;
+}
+
+.address{
+  font-size: 15px;
+  font-weight: 400;
+}
