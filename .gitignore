@@ -1,0 +1,10 @@
+node_modules/
+.angular/
+.idea/workspace.xml
+.idea/.DS_Store
+.DS_Store
+public/
+assets/
+appServer/node_modules
+appServer/package-lock.json
+appServer/.env
