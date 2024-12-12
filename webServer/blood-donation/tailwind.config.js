@@ -2,10 +2,16 @@
 
 module.exports = {
   content: [
-    './src/**/*.{html,js}',  // Adjust the path based on your project structure
+    './src/**/*.{html,js}',  
+  ],
+  safelist: [
+    'hidden', 
+    'block', 
+    'z-10'
   ],
   theme: {
     extend: {},
   },
   plugins: [],
 };
+

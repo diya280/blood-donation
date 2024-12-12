@@ -6,5 +6,6 @@ node_modules/
 public/
 assets/
 appServer/node_modules
+appServer/package.json
 appServer/package-lock.json
 appServer/.env

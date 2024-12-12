@@ -14,13 +14,14 @@ export class NavbarComponent implements OnInit{
 
   constructor(private service: AuthServiceService, private toast: ToastrService, private route: Router){}
 
-  loginUser: any[] =[];
+  loginUser: any;
   isModalOpen: boolean = false;
   email: string = '';
   password: string = '';
   errorMessage: string = ''; 
   activeButton: string = 'home'; 
   showPassword: boolean = false;
+  isProfileModal: boolean = false;
 
   openModal() {
     console.log('open click')
@@ -38,9 +39,8 @@ export class NavbarComponent implements OnInit{
 
   getUser(){
     this.service.getLoginUser().subscribe((res:any)=>{
-      console.log('res-data', res)
       this.loginUser = res.data
-      console.log('login-user', this.loginUser)
+      console.log('login-user', this.loginUser);
     },(error:any)=>{
       console.log('error in getting user', error)
     })
@@ -65,9 +65,7 @@ export class NavbarComponent implements OnInit{
       password: this.password,
     }
 
-    console.log('data',data)
     this.service.loginUser(data).subscribe((res:any)=>{
-      console.log('response-login', res)
       if (res.status === 'Success') {
         localStorage.setItem('authToken', res.token);
         console.log('Token saved:', res.token);
@@ -106,6 +104,21 @@ navigateToMember(){
 }
 
 setActiveButton(button: string): void {
+  console.log('button', button);
   this.activeButton = button; 
 }
+
+
+openProfileModal(){
+  console.log('profile open');
+  
+this.isProfileModal = true;
+}
+
+closeProfileModal(){
+  console.log("profile close");
+  
+this.isProfileModal = false;
+}
+
 }

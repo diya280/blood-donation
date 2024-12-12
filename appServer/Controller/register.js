@@ -250,28 +250,77 @@ async function getCampById(req, res, next) {
     }
 }
 
+// async function getAllCamps(req, res, next) {
+//   try {
+//     const userId = req.user?.id;
+//     if (!userId) {
+//       return res.status(400).json({
+//         status: 'Error',
+//         language: 'en-US',
+//         message: 'User ID is required.',
+//       });
+//     }
+
+//     const campData = await camp.find({ createdId: { $ne: userId } });
+//     res.status(200).json({
+//       status: 'Success',
+//       language: 'en-US',
+//       data: campData,
+//       message: 'Get all camps successfully!',
+//     });
+//   } catch (err) {
+//     console.error('Error:', err);
+//     res.status(500).json({
+//       status: 'Error',
+//       language: 'en-US',
+//       error: err.message,
+//     });
+//   }
+// }
+
+
 async function getAllCamps(req, res, next) {
-    try{
-
-    const campData = await camp.find()
-    console.log('camp-data', campData)
-
-        res.status(201).json({
-            status: 'Success',
-            language: 'en-US',
-            data: campData,
-            message: 'get all camps successfully!',
-        });
-    }catch(err){
-        console.error('Error:', err);
-        res.status(500).json({
-            status: "Error",
-            language: 'en-US',
-            error: err.message,
-        });   
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(400).json({
+        status: 'Error',
+        language: 'en-US',
+        message: 'User ID is required.',
+      });
     }
-    
+
+    const page = parseInt(req.query.page) || 1;
+    const size = parseInt(req.query.size) || 6;
+    const skip = (page - 1) * size;
+
+    const totalCamps = await camp.countDocuments({ createdId: { $ne: userId } });
+    const campData = await camp
+      .find({ createdId: { $ne: userId } })
+      .skip(skip)
+      .limit(size);
+
+    res.status(200).json({
+      status: 'Success',
+      language: 'en-US',
+      data: campData,
+      totalItems: totalCamps,
+      currentPage: page,
+      totalPages: Math.ceil(totalCamps / size),
+      message: 'Get all camps successfully!',
+    });
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).json({
+      status: 'Error',
+      language: 'en-US',
+      error: err.message,
+    });
+  }
 }
+
+
+
 
 async function addMember(req, res, next) {
     try {
@@ -355,8 +404,65 @@ async function addMember(req, res, next) {
       });
     }
   }
+
+
+  async function filterByAddress(req, res, next) {
+    try {
+      const keyword = req.query.city; 
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 6; 
+      const skip = (page - 1) * limit;
+  
+      console.log('Search keyword:', keyword);
+  
+      if (!keyword) {
+        return res.status(400).json({
+          status: 'Error',
+          language: 'en-US',
+          message: 'Did not get keyword for search',
+        });
+      }
+  
+      const query = {
+        $or: [
+          { 'address.streetAddress': { $regex: keyword, $options: 'i' } },
+          { 'address.city': { $regex: keyword, $options: 'i' } },
+          { 'address.district': { $regex: keyword, $options: 'i' } },
+          { 'address.block': { $regex: keyword, $options: 'i' } },
+          { 'address.state': { $regex: keyword, $options: 'i' } },
+        ],
+      };
+  
+      const totalItems = await camp.countDocuments(query); 
+      const filteredData = await camp.find(query)
+        .skip(skip)
+        .limit(limit);
+  
+      return res.status(200).json({
+        status: 'Success',
+        language: 'en-US',
+        data: filteredData,
+        pagination: {
+          totalItems,
+          currentPage: page,
+          totalPages: Math.ceil(totalItems / limit),
+          itemsPerPage: limit,
+        },
+        message: 'Search successfully by address with pagination',
+      });
+    } catch (err) {
+      console.error('Error:', err);
+      return res.status(500).json({
+        status: 'Error',
+        language: 'en-US',
+        error: err.message,
+        message: 'Error in searching address',
+      });
+    }
+  }
+  
   
 
-module.exports = { addOrganisation, loginOrgnisation, getLoginUser, createCamp, getCampById, getAllCamps, addMember, getAttendeesById };
+module.exports = { addOrganisation, loginOrgnisation, getLoginUser, createCamp, getCampById, getAllCamps, addMember, getAttendeesById, filterByAddress };
 
 

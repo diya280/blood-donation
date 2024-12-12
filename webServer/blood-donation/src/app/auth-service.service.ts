@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable, from } from 'rxjs';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -80,9 +79,24 @@ getCampById(): Observable<any> {
   );
 }
 
-getAllCamp(){
-  const apiUrl: string = `http://localhost:8080/api/get/camp`;
-  return this.http.get(apiUrl)
+getAllCamp(page:any){
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    throw new Error('Token is missing');
+  }
+  return from(
+    fetch(`http://localhost:8080/api/get/camp?page=${page}&size=6`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => response.json())
+    .catch(error => {
+      console.error(error);
+      throw error; 
+    })
+  );
 }
 
 AddMember(data:any){
@@ -94,5 +108,24 @@ getAttendees(id:any){
   const apiUrl: string = `http://localhost:8080/api/get/attendees?id=${id}`;
   return this.http.get(apiUrl)
 }
+
+searchCity(city:any, page:any){
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    throw new Error('Token is missing');
+  }
+  return from(
+    fetch(`http://localhost:8080/api/get/filterKeywords?city=${city}&page=${page}&size=6`, {
+      method: 'GET',
+      headers: {'Authorization': `Bearer ${token}`}
+    })
+    .then(response => response.json())
+    .catch(error => {
+      console.error(error);
+      throw error; 
+    })
+  );
+}
+
 
 }

@@ -1,11 +1,11 @@
-<!-- <script src="https://cdn.jsdelivr.net/npm/flowbite@1.4.7/dist/flowbite.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/flowbite@1.4.7/dist/flowbite.min.js"></script>
 
 <nav class="border-gray-200 dark:bg-gray-900 bg-gradient-to-r from-black to-transparent text-wheat py-2 md:py-4 lg:py-0">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4 lg:px-8">
-    <a href="#" class="flex items-center space-x-3">
+    <div class="flex items-center space-x-3">
       <img src="assets/images/blood-drop.png" class="h-8 md:h-10 lg:h-12" alt="Blood-Donation Logo" />
       <span class="text-lg md:text-2xl font-semibold text-white">Blood-Donation</span>
-    </a>
+    </div>
     <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700" aria-controls="navbar-default" aria-expanded="false">
       <span class="sr-only">Open main menu</span>
       <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
@@ -14,7 +14,7 @@
     </button>
 
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-      <ul *ngIf="loginUser.length === 0" class="font-medium flex flex-col md:flex-row md:space-x-6 lg:space-x-8 mt-4 md:mt-0 text-center md:text-left">
+      <ul *ngIf="!loginUser" class="font-medium flex flex-col md:flex-row md:space-x-6 lg:space-x-8 mt-4 md:mt-0 text-center md:text-left">
         <li>
           <a href="signup" class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-500">Signup</a>
         </li>
@@ -23,7 +23,7 @@
         </li>
       </ul>
 
-      <ul *ngIf="loginUser.length !== 0" 
+      <ul *ngIf="loginUser" 
       class="font-medium flex flex-col md:flex-row md:space-x-6 lg:space-x-8 mt-4 md:mt-0 text-center md:text-left">
     
     <!-- Home Button -->
@@ -78,6 +78,17 @@
         Add-members
       </a>
     </li>
+
+    <li>
+      <a href="javascript:void(0)" style="margin-top: -8px;"
+      (click)="setActiveButton('profile'); openProfileModal()"
+         [ngClass]="{'bg-white text-blue-700': activeButton === 'profile', 'hover:text-blue-700': activeButton !== 'profile'}"
+         class="block py-2 px-3 text-gray-900 dark:text-white rounded-[10px]">
+        <img src="assets/images/profile.png" class="h-8 md:h-10 lg:h-12" alt="profile icon" />
+      </a>
+    </li>
+
+
   </ul>
   
 
@@ -85,7 +96,65 @@
   </div>
 </nav>
 
-  <!-- Modal Section -->
+
+<!-- profile modal section -->
+
+<div *ngIf="isProfileModal">
+  <div id="authentication-modal" 
+       class="fixed inset-0 z-50 w-full h-full flex justify-center items-center bg-black bg-opacity-50" 
+       role="dialog" 
+       aria-modal="true" 
+       aria-labelledby="modal-title">
+
+    <div class="relative w-full max-w-xl mx-auto p-6 bg-white rounded-lg shadow dark:bg-gray-700">
+      <div class="flex justify-between items-center">
+        <h2 id="modal-title" class="text-xl font-bolder dark:text-white">
+         Organisation Profile
+        </h2>
+        <button (click)="closeProfileModal()" 
+                type="button" style="margin-bottom: 8px;"
+                aria-label="Close modal" 
+                class="text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg p-2 focus:outline-none">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" aria-hidden="true">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex justify-center items-center orgName" >
+        <h3 id="modal-title">
+         {{loginUser?.organisationName | titlecase}}
+         </h3>
+      </div>
+
+      <div class="flex justify-between" >
+        <h3 class="modal-email"> Email - 
+          <span class="modal-body">{{loginUser?.email}}</span>
+         </h3>
+      </div>
+
+
+      <div class="flex justify-betweenl" >
+        <h3 class="modal-email"> Conatct - 
+          <span class="modal-body">{{loginUser?.contact}}</span>
+         </h3>
+      </div>
+
+      <div class="flex justify-between" >
+        <h3 class="modal-email"> Address - 
+          <span class="modal-address">{{loginUser?.address?.streetAddress | titlecase}}, {{loginUser?.address?.city | titlecase}}, {{loginUser?.address?.district}}, {{loginUser?.address?.block | titlecase}}, {{loginUser?.address?.zipCode}}, ({{loginUser?.address?.state | titlecase}}) </span>
+         </h3>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+  <!-- login Modal Section -->
 
 <div *ngIf="isModalOpen">
   <div id="authentication-modal" 

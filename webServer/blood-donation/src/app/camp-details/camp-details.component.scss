@@ -1,33 +1,9 @@
-.camp {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh; 
-    background-color: #f9fafb; 
-  }
-  
-  .noCamps {
-    max-width: 400px;
-    font-size: 1.25rem;
-    color: #16171a; 
-    background-color: #e0f2fe;
-    border: 2px dashed #16171a; 
-    border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    animation: fadeIn 0.5s ease-in-out; 
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+
+
+#search-bar{
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
 
  .creat-date{
   text-align: end;
@@ -73,4 +49,37 @@
 .address{
   font-size: 15px;
   font-weight: 400;
+}
+
+.calendar{
+  display: flex;
+  right: 35px;
+}
+
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.btn-pagination {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.btn-pagination:disabled {
+  background-color: #c0c0c0;
+  cursor: not-allowed;
+}
+
+.refresh{
+  margin-left: 42px;
 }

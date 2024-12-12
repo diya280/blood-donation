@@ -3,15 +3,16 @@ const express = require("express");
 const router = express.Router();
 const { userUploads } = require('../multer/multer'); 
 
-const { addOrganisation, loginOrgnisation, getLoginUser, createCamp, getCampById, getAllCamps, addMember, getAttendeesById } = require('../Controller/register');
+const { addOrganisation, loginOrgnisation, getLoginUser, createCamp, getCampById, getAllCamps, addMember, getAttendeesById, filterByAddress } = require('../Controller/register');
 
 router.post('/add/organisation', userUploads.none(), addOrganisation);
 router.post('/login/organisation', loginOrgnisation);
 router.get('/get/login/user', authMiddleware, getLoginUser);  
 router.post('/create/camp', authMiddleware, createCamp);
 router.get('/get/camp/id', authMiddleware, getCampById);
-router.get('/get/camp', getAllCamps);  
+router.get('/get/camp', authMiddleware, getAllCamps);  
 router.post('/add/members', addMember);
 router.get('/get/attendees', getAttendeesById)
+router.get('/get/filterKeywords', filterByAddress)
 
 module.exports = router;

@@ -1,39 +1,34 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthServiceService } from '../auth-service.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Renderer2 } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-camp-details',
   templateUrl: './camp-details.component.html',
   styleUrls: ['./camp-details.component.scss']
 })
-export class CampDetailsComponent implements OnInit, OnDestroy {
+export class CampDetailsComponent implements OnInit {
   status: string = '';
   camps: any[] = [];
   isModalOpen: boolean = false;
   selectedUser: any = null;
   userId: string = '';
-  queryParamsSubscription!: Subscription;
   currentPage: number = 1;
-  itemsPerPage: number = 9; 
+  totalPages: number = 1;
+  isDropdownOpen: boolean = false;
+  selectedOption: string = 'All categories';  
+  searchQuery: string = '';  
 
-  constructor(private service: AuthServiceService, private route: ActivatedRoute) {}
+
+  constructor(private service: AuthServiceService,private toast: ToastrService,private route: ActivatedRoute) {}
+ 
 
   ngOnInit(): void {
   this.getLoginUser();
-
-    this.queryParamsSubscription = this.route.queryParams.subscribe((params) => {
-      this.status = params['status'];
-      console.log('Received status:', this.status);
-      this.loadCampsBasedOnStatus();
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (this.queryParamsSubscription) {
-      this.queryParamsSubscription.unsubscribe();
-    }
+  this.getAllCamps();
   }
 
 getLoginUser(){
@@ -44,68 +39,69 @@ getLoginUser(){
     },
     (error: any) => {
       console.error('Error in getting logged-in user:', error);
+    });
+}
+
+getAllCamps(): void {
+  this.service.getAllCamp(this.currentPage).subscribe(
+    (res: any) => {
+      this.camps = res.data;
+      this.totalPages = res.totalPages;
+    },
+    (error: any) => {
+      console.error('Error fetching all camps:', error);
     }
   );
 }
 
-  loadCampsBasedOnStatus(): void {
-    if (this.status === 'id') {
-      this.getLoginUser();
-      this.getCampById();
-    } else if (this.status === 'all') {
-      this.getLoginUser();
-      this.getAllCamps();
-    } else {
-      console.log('Invalid status value:', this.status);
-    }
-  }
+refresh(){
+  this.getAllCamps()
+  this.searchQuery = '';
+  this.currentPage = 1;
+}
 
-  getCampById(): void {
-    console.log('Fetching camps by ID...');
-    this.service.getCampById().subscribe(
-      (res: any) => {
-        console.log('Camps by ID:', res);
-        this.camps = res.data;
-        this.camps.reverse();
-      },
-      (error: any) => {
-        console.error('Error fetching camps by ID:', error);
-      }
-    );
-  }
 
-  getAllCamps(): void {
-    console.log('Fetching all camps...');
-    this.service.getAllCamp().subscribe(
-      (res: any) => {
-        this.camps = res.data.filter((data: any) => data.createdId !== this.userId);
-        console.log('All camps:', this.camps);
-        this.camps.reverse();
-      },
-      (error: any) => {
-        console.error('Error fetching all camps:', error);
-      }
-    );
+onKeydown(event: KeyboardEvent) {
+  console.log('event-called', event, event.key);
+  
+  if (event.key === 'Enter') {
+    this.filterByCity();
   }
+}
+
+
+filterByCity() {
+  const city = this.searchQuery;
+   this.service.searchCity(city, this.currentPage).subscribe((res: any) => {  
+     this.camps = res.data;
+     this.totalPages = res.pagination.totalPages; 
+   },(error:any)=>{
+     console.error('error in search', error)
+     this.toast.error(error.error.message || "Error in search by address")
+   });
+ }
+
+ changePage(page: number): void {
+  if (page >= 1 && page <= this.totalPages) {
+    this.currentPage = page;
+    this.getAllCamps();
+  }
+}
 
   openModal(user: any): void {
     this.selectedUser = user;
     this.isModalOpen = true;
+    document.body.classList.add('modal-open');
   }
 
   closeModal(): void {
     this.isModalOpen = false;
     this.selectedUser = null;
+    document.body.classList.remove('modal-open');
   }
 
-get paginatedCamps() {
-  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-  return this.camps.slice(startIndex, startIndex + this.itemsPerPage);
-}
 
-goToPage(page: number): void {
-  this.currentPage = page;
-}
+
 
 
 
