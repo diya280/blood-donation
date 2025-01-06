@@ -223,61 +223,47 @@ async function createCamp(req, res, next) {
 }
 
 async function getCampById(req, res, next) {
-    try{
-        const campId = req.user.id
-        if (!campId) {
-            return res.status(400).json({
+  try {
+      const campId = req.user.id;
+      const page = parseInt(req.query.page) || 1;
+      const size = parseInt(req.query.size) || 4;
+
+      if (!campId) {
+          return res.status(400).json({
               status: 'Error',
               language: 'en-US',
               message: 'Id is required.',
-            });
-          }
+          });
+      }
 
-        const camps = await camp.find({createdId: campId})
-           res.status(201).json({
-            status: 'Success',
-            language: 'en-US',
-            data: camps,
-            message: 'get camp by id successfully!',
-        });
-    }catch(err){
-        console.error('Error:', err);
+      const skip = (page - 1) * size;
+      const camps = await camp.find({ createdId: campId })
+          .sort({ createdAt: -1 }) 
+          .skip(skip)
+          .limit(size);
+
+      const total = await camp.countDocuments({ createdId: campId });
+
+      res.status(200).json({
+          status: 'Success',
+          language: 'en-US',
+          data: camps,
+          pagination: {
+              currentPage: page,
+              totalPages: Math.ceil(total / size),
+              totalItems: total,
+          },
+          message: 'Get camp by ID successfully!',
+      });
+  } catch (err) {
+      console.error('Error:', err);
       res.status(500).json({
           status: "Error",
           language: 'en-US',
           error: err.message,
-      }); 
-    }
+      });
+  }
 }
-
-// async function getAllCamps(req, res, next) {
-//   try {
-//     const userId = req.user?.id;
-//     if (!userId) {
-//       return res.status(400).json({
-//         status: 'Error',
-//         language: 'en-US',
-//         message: 'User ID is required.',
-//       });
-//     }
-
-//     const campData = await camp.find({ createdId: { $ne: userId } });
-//     res.status(200).json({
-//       status: 'Success',
-//       language: 'en-US',
-//       data: campData,
-//       message: 'Get all camps successfully!',
-//     });
-//   } catch (err) {
-//     console.error('Error:', err);
-//     res.status(500).json({
-//       status: 'Error',
-//       language: 'en-US',
-//       error: err.message,
-//     });
-//   }
-// }
-
 
 async function getAllCamps(req, res, next) {
   try {
@@ -318,9 +304,6 @@ async function getAllCamps(req, res, next) {
     });
   }
 }
-
-
-
 
 async function addMember(req, res, next) {
     try {
@@ -372,41 +355,48 @@ async function addMember(req, res, next) {
         message: 'Error adding member',
       });
     }
-  }
+}
   
-  async function getAttendeesById(req, res, next) {
-    try {
-      const id = req.query.id;  
-      if (!id) {
-        return res.status(400).json({
-          status: 'Error',
-          language: 'en-US',
-          message: 'Id is required.',
-        });
-      }
-  
-      const members = await attendees.find({ campId: id }).populate({ path: 'campId', model: 'camp' }).exec();
-  
-      return res.status(200).json({
-        status: 'Success',
-        language: 'en-US',
-        data: members,
-        message: 'Members retrieved successfully by campId',
-      });
-  
-    } catch (err) {
-      console.error('Error:', err);
-      return res.status(500).json({
+async function getAttendeesById(req, res, next) {
+  try {
+    const id = req.query.id;
+    const page = parseInt(req.query.page);
+    const size = parseInt(req.query.size);
+    console.log('req', id, page, size);
+    
+    if (!id) {
+      return res.status(400).json({
         status: 'Error',
         language: 'en-US',
-        error: err.message,
-        message: 'Error in getting members',
+        message: 'Id is required.',
       });
     }
+    const skip = (page - 1) * size;
+    const members = await attendees.find({ campId: id }).populate({ path: 'campId', model: 'camp' }).skip(skip).limit(parseInt(size)).exec();
+    const total = await attendees.countDocuments({ campId: id });
+    return res.status(200).json({
+      status: 'Success',
+      language: 'en-US',
+      data:members,
+       pagination:{
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / size),
+        totalItems: total,
+      },
+      message: 'Members retrieved successfully by campId',
+    });
+  } catch (err) {
+    console.error('Error:', err);
+    return res.status(500).json({
+      status: 'Error',
+      language: 'en-US',
+      error: err.message,
+      message: 'Error in getting members',
+    });
   }
+}
 
-
-  async function filterByAddress(req, res, next) {
+async function filterByAddress(req, res, next) {
     try {
       const keyword = req.query.city; 
       const page = parseInt(req.query.page) || 1;
@@ -459,9 +449,9 @@ async function addMember(req, res, next) {
         message: 'Error in searching address',
       });
     }
-  }
+}
   
-  
+
 
 module.exports = { addOrganisation, loginOrgnisation, getLoginUser, createCamp, getCampById, getAllCamps, addMember, getAttendeesById, filterByAddress };
 

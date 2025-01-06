@@ -47,7 +47,7 @@ font-weight: bolder;
   font-weight: 600;
   margin-top: 10px;
   margin-bottom: -15px;
-  background: repeating-linear-gradient(45deg, black, transparent 100px);
+  background: repeating-radial-gradient(black, transparent 100px);
   color: white;
   width: 7.2rem;
   height: 38px;
@@ -73,4 +73,81 @@ font-weight: 500;
 .address{
 font-size: 15px;
 font-weight: 400;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  gap: 10px;
+  font-family: 'Arial', sans-serif;
+}
+
+.pagination button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #45a049; 
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 18px;
+  color: #333;
+  padding: 0 10px;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pagination button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  .pagination span {
+    font-size: 16px;
+  }
+}
+
+.camp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noCamps {
+  max-width: 400px;
+  font-size: 1.25rem;
+  color: #16171a; 
+  background-color: #e0f2fe;
+  border: 2px dashed #16171a; 
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  animation: fadeIn 0.5s ease-in-out; 
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

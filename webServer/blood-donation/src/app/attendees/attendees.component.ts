@@ -25,20 +25,19 @@ district: string = '';
 block: string = '';
 zipCode: string = '';
 state: string = '';
-page: number = 1;    
-totalItems: any
+currentPage: number = 1;
+totalPages: number = 0;
+limit: number = 5;
 
 
-  ngOnInit(): void {
+ngOnInit(): void {
       this.routeId = this.route.snapshot.paramMap.get('id'); 
       this.getAttendees();  
   }
 
 getAttendees(){
-  this.service.getAttendees(this.routeId).subscribe((res:any)=>{
+  this.service.getAttendees(this.routeId, this.currentPage).subscribe((res:any)=>{
     this.attendees = res.data
-
-
     this.title = this.attendees[0].campId.title,
     this.date = this.attendees[0].campId.date,
     this.streetAddress = this.attendees[0].campId.address.streetAddress,
@@ -48,10 +47,26 @@ getAttendees(){
     this.zipCode = this.attendees[0].campId.address.zipCode,
     this.state = this.attendees[0].campId.address.state,
 
-    console.log('attendess', this.attendees);
+    this.totalPages = res.pagination.totalPages;
+    console.log('attendess', res);
   },(error:any)=>{
     console.error('error in getting attendees', error)
   })
+}
+
+
+nextPage() {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+    this.getAttendees();
+  }
+}
+
+previousPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.getAttendees();
+  }
 }
 
 }

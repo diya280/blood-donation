@@ -27,6 +27,7 @@
       class="font-medium flex flex-col md:flex-row md:space-x-6 lg:space-x-8 mt-4 md:mt-0 text-center md:text-left">
     
     <!-- Home Button -->
+
     <li>
       <a href="javascript:void(0)" 
          (click)="setActiveButton('home'); navigateToHome()" 
@@ -37,6 +38,7 @@
     </li>
   
     <!-- Add-Camp Button -->
+
     <li>
       <a href="javascript:void(0)" 
          (click)="setActiveButton('addCamp'); navigateToAdd()" 
@@ -60,6 +62,7 @@
 
     
     <!-- All Camps Button -->
+
     <li>
       <a href="javascript:void(0)" 
          (click)="setActiveButton('allCamps'); navigateToDetails('all')" 
@@ -68,8 +71,11 @@
         All Camps
       </a>
     </li>
+
+
   
     <!-- Add-members Button -->
+
     <li>
       <a href="javascript:void(0)" 
          (click)="setActiveButton('addMembers'); navigateToMember()" 
@@ -78,6 +84,8 @@
         Add-members
       </a>
     </li>
+
+     <!-- Show Profile Button -->
 
     <li>
       <a href="javascript:void(0)" style="margin-top: -8px;"
@@ -88,11 +96,10 @@
       </a>
     </li>
 
-
   </ul>
   
-
     </div>
+    
   </div>
 </nav>
 
@@ -107,6 +114,7 @@
        aria-labelledby="modal-title">
 
     <div class="relative w-full max-w-xl mx-auto p-6 bg-white rounded-lg shadow dark:bg-gray-700">
+
       <div class="flex justify-between items-center">
         <h2 id="modal-title" class="text-xl font-bolder dark:text-white">
          Organisation Profile
@@ -146,12 +154,28 @@
          </h3>
       </div>
 
+      <div class="d-flex justify-content-end">
+       <button type="button" class="btn btn-danger btn-sm" (click)="openLogoutModal()" style="width: 10em;margin-top: 20px;">
+        Logout
+      </button>
+     </div>
+
+     <div class="d-flex justify-center" *ngIf="isLogout">
+      <div class="logout-heading">
+        Are you sure you want to logout? 
+        <div class="d-flex justify-between">
+          <button class="btn btn-success logout-btn" (click)="logoutUser()">Yes</button>
+          <button class="btn btn-secondary logout-btn" (click)="closeLogoutModal()">No</button>
+        </div>
+      </div>
+     </div>
 
     </div>
   </div>
+
+
+
 </div>
-
-
 
 
   <!-- login Modal Section -->

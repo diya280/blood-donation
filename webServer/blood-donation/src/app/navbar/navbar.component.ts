@@ -3,7 +3,6 @@ import { AuthServiceService } from '../auth-service.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
-
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -11,9 +10,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 
 export class NavbarComponent implements OnInit{
-
+  
   constructor(private service: AuthServiceService, private toast: ToastrService, private route: Router){}
-
   loginUser: any;
   isModalOpen: boolean = false;
   email: string = '';
@@ -22,22 +20,23 @@ export class NavbarComponent implements OnInit{
   activeButton: string = 'home'; 
   showPassword: boolean = false;
   isProfileModal: boolean = false;
+  isLogout: boolean = false;
 
-  openModal() {
+ openModal() {
     console.log('open click')
     this.isModalOpen = true;
   }
 
-  closeModal() {
+ closeModal() {
     console.log('close click')
     this.isModalOpen = false;
   }
 
-  ngOnInit(): void {
+ ngOnInit(): void {
     this.getUser()
   }
 
-  getUser(){
+ getUser(){
     this.service.getLoginUser().subscribe((res:any)=>{
       this.loginUser = res.data
       console.log('login-user', this.loginUser);
@@ -46,25 +45,21 @@ export class NavbarComponent implements OnInit{
     })
   }
 
-
-  togglePasswordVisibility(): void {
+ togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
   
-  loginOrganisation(event: Event): void {
+ loginOrganisation(event: Event): void {
     event.preventDefault();
-
     if (!this.email || !this.password) {
       alert('Please fill in all required fields.');
       return;
     }
-
     console.log('Logging in with:', this.email, this.password);
     const data ={
       email: this.email,
       password: this.password,
     }
-
     this.service.loginUser(data).subscribe((res:any)=>{
       if (res.status === 'Success') {
         localStorage.setItem('authToken', res.token);
@@ -80,45 +75,55 @@ export class NavbarComponent implements OnInit{
     })
   }
 
-clearData(){
+ clearData(){
   this.email = '',
   this.password = ''
 }
 
-navigateToAdd(){
+ navigateToAdd(){
   this.route.navigate(['/add-camp']);
 }
 
-navigateToHome(){
+ navigateToHome(){
   this.route.navigate(['/']);
 }
 
-navigateToDetails(status: string) {
-  console.log('status', status);
+ navigateToDetails(status: string) {
   this.route.navigate(['/camp-details'], 
     { queryParams: { status: status } });
 }
 
-navigateToMember(){
+ navigateToMember(){
   this.route.navigate(['/add-member']);
 }
 
-setActiveButton(button: string): void {
+ setActiveButton(button: string): void {
   console.log('button', button);
   this.activeButton = button; 
 }
 
-
-openProfileModal(){
-  console.log('profile open');
-  
+ openProfileModal(){
 this.isProfileModal = true;
 }
 
-closeProfileModal(){
-  console.log("profile close");
-  
+ closeProfileModal(){
 this.isProfileModal = false;
+}
+
+ openLogoutModal(){
+    this.isLogout = true;
+}
+
+ closeLogoutModal(){
+  this.isLogout =false;
+}
+
+ logoutUser() {
+  localStorage.removeItem('authToken');
+  this.isLogout = false; 
+  this.closeProfileModal();
+  this.loginUser = false;
+  this.navigateToHome();
 }
 
 }

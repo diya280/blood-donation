@@ -24,21 +24,57 @@ city: string = '';
 district: string = '';
 block: string = '';
 zipCode: string = '';
-state: string = '';
 contact: string = '';
+selectedState: string = '';
+states: string[] = [
+  'Andhra Pradesh',
+  'Arunachal Pradesh',
+  'Assam',
+  'Bihar',
+  'Chhattisgarh',
+  'Goa',
+  'Gujarat',
+  'Haryana',
+  'Himachal Pradesh',
+  'Jharkhand',
+  'Karnataka',
+  'Kerala',
+  'Madhya Pradesh',
+  'Maharashtra',
+  'Manipur',
+  'Meghalaya',
+  'Mizoram',
+  'Nagaland',
+  'Odisha',
+  'Punjab',
+  'Rajasthan',
+  'Sikkim',
+  'Tamil Nadu',
+  'Telangana',
+  'Tripura',
+  'Uttar Pradesh',
+  'Uttarakhand',
+  'West Bengal'
+];
 
 onSubmit(form: any) {
   if (form.valid) {
     console.log('Form Submitted!', form.value);
+    this.service.createCamp(form.value).subscribe(
+      (res: any) => {
+        console.log('response', res);
+        this.toast.success(res.message || 'Camp added successfully');
+        
+        form.resetForm(); 
+        form.submitted = false; 
+      },
+      (error: any) => {
+        console.error('error in add camp', error);
+      }
+    );
   }
-  console.log('method called - add camp')
-  this.service.createCamp(form.value).subscribe((res:any)=>{
-     console.log('response', res)
-  },(error:any)=>{
-    console.error('error in add camp', error)
-  })
-
 }
+
 
 
 }

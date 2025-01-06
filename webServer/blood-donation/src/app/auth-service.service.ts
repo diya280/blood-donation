@@ -22,11 +22,9 @@ loginUser(data:any){
 
 getLoginUser(): Observable<any> {
   const token = localStorage.getItem('authToken');
-  
   if (!token) {
     throw new Error('Token is missing');
   }
-
   return from(
     fetch('http://localhost:8080/api/get/login/user', {
       method: 'GET',
@@ -46,18 +44,18 @@ createCamp(data: any) {
   const token = localStorage.getItem('authToken'); 
 
   if (!token) {
-    throw new Error('Unauthorized: Token is missing'); // Stop if there's no token
+    throw new Error('Unauthorized: Token is missing'); 
   }
 
   const apiUrl: string = `http://localhost:8080/api/create/camp`;
   return this.http.post(apiUrl, data, {
     headers: {
-      Authorization: `Bearer ${token}`, // Add the token in the header
+      Authorization: `Bearer ${token}`, 
     },
   });
 }
 
-getCampById(): Observable<any> {
+getCampById(page: any): Observable<any> {
   const token = localStorage.getItem('authToken');
   
   if (!token) {
@@ -65,7 +63,7 @@ getCampById(): Observable<any> {
   }
 
   return from(
-    fetch('http://localhost:8080/api/get/camp/id', {
+    fetch(`http://localhost:8080/api/get/camp/id?page=${page}&size=4`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -104,8 +102,8 @@ AddMember(data:any){
   return this.http.post(apiUrl, data)
 }
 
-getAttendees(id:any){
-  const apiUrl: string = `http://localhost:8080/api/get/attendees?id=${id}`;
+getAttendees(id:any,page: any){
+  const apiUrl: string = `http://localhost:8080/api/get/attendees?id=${id}&page=${page}&size=5`;
   return this.http.get(apiUrl)
 }
 
@@ -126,6 +124,5 @@ searchCity(city:any, page:any){
     })
   );
 }
-
 
 }

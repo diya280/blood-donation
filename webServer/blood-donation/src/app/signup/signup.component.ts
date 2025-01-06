@@ -100,15 +100,13 @@ export class SignupComponent implements OnInit {
       this.service.signupUser(formData).subscribe(
         (res: any) => {
           console.log('Form submitted successfully:', res);
-          this.toast.success(res.message);
           if (res.status === 'Success') {
             localStorage.setItem('authToken', res.token);
             console.log('Token saved:', res.token);
             this.toast.success(res.message || 'Organisation signed up succesfully')
             this.navigateToDashboard();
           }
-        },
-        (error: any) => {
+        }, (error: any) => {
           console.error('Error during signup:', error);
           this.toast.error(error.error.message ||'Signup failed. Please try again.', 'Error');
         }

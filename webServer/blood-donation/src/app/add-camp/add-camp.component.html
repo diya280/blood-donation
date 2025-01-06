@@ -65,12 +65,24 @@
           </div>
         </div>
         <!-- State -->
+
         <div class="col-md-6">
-          <label for="state" class="form-label">State</label>
-          <input type="text" class="form-control" id="state" name="state" [(ngModel)]="state"
-            placeholder="Enter state" required>
-          <div *ngIf="campForm.submitted && !state" class="text-danger mt-1">State is required.</div>
+            <label for="state" class="form-label">State</label>
+            <select 
+            class="form-control" 
+            id="state" 
+            name="state" 
+            [(ngModel)]="selectedState" 
+            required
+          >
+            <option value="" disabled selected>Select a state</option>
+            <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+          </select>
+        
+          <div *ngIf="campForm.submitted && !states" class="text-danger mt-1">State is required.</div>
         </div>
+
+
         <!-- Contact -->
         <div class="col-md-6">
           <label for="contact" class="form-label">Contact</label>

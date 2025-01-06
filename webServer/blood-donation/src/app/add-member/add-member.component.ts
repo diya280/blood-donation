@@ -18,7 +18,8 @@ constructor(private service: AuthServiceService,
 @ViewChild('memberForm') memberForm! : NgForm;              
 camps: any[] = [];
 currentPage: number = 1;
-itemsPerPage: number = 8;
+totalPages: number = 0;
+limit: number = 4;
 isModalOpen = false;
 memberData = {
     firstName: '',
@@ -79,23 +80,15 @@ memberData = {
   }
 
 
-
-get paginatedCamps() {
-  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-  return this.camps.slice(startIndex, startIndex + this.itemsPerPage);
-}
-
-goToPage(page: number): void {
-  this.currentPage = page;
-}
-
 ngOnInit(): void {
     this.getUserCamp();
 }
 
 getUserCamp(){
-  this.service.getCampById().subscribe((res:any)=>{
+  this.service.getCampById(this.currentPage).subscribe((res:any)=>{
     this.camps = res.data 
+    console.log('res', res);
+    this.totalPages = res.pagination.totalPages;
   },(error:any)=>{
     console.error('error in getting camp', error)
     this.toast.error('Getting error, try after sometime')
@@ -104,6 +97,21 @@ getUserCamp(){
 
 showAddedmembers(id: any) {
   this.route.navigate([`/attendees/${id}`]);
+}
+
+
+nextPage() {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+    this.getUserCamp();
+  }
+}
+
+previousPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.getUserCamp();
+  }
 }
 
 
